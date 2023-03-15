@@ -20,19 +20,22 @@ Once installed, you can create a new application by creating a Python file and i
 ```python
 from simple_python_framework import SimplePythonFramework
 
-app = SimplePythonFramework()```
+app = SimplePythonFramework()
+```
 
 You can then define your views and URL routes using the `@app.route` decorator:
 
 ```python
 @app.route("/")
 def index(request):
-    return "Hello, world!"```
+    return "Hello, world!"
+```
     
 Finally, you can run your application using the run method:
 
 ```pythonif __name__ == "__main__":
-    app.run()```
+    app.run()
+```
 
 ## Contributing
 If you would like to contribute to SimplePythonFramework, please feel free to submit a pull request or open an issue. We welcome contributions of all kinds, including bug fixes, new features, documentation improvements, and more.
