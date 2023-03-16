@@ -27,7 +27,7 @@ You can then define your views and URL routes using the `@app.route` decorator i
 
 ```python
 @app.route("/")
-def Route():
+def Route(data):
     return "Hello, world!"
 ```
     
@@ -36,7 +36,7 @@ You can render html's that found in the `src` directory and send data to it:
 
 ```python
 @app.GET('/')
-def Route():
+def Route(data):
     # return_code(500)
     return render('example_render', { # render(@file, @data) 
         "title": "Example Render",    # @file: Render file from "/src/..."
@@ -48,7 +48,7 @@ And you can declare 404 function:
 
 ```python
 @app.DEFAULT_404(404) # RESPONSE CODE
-def Route():
+def Route(data):
     return "Error 404"
 ```
 
