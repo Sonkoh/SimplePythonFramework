@@ -11,31 +11,48 @@ SimplePythonFramework is a lightweight web framework for Python that aims to mak
 
 ## Getting Started
 
-To get started with SimplePythonFramework, you can install it using pip:
+To get started with SimplePythonFramework, you can clone the repository with:
 
-pip install simple-python-framework
-
-Once installed, you can create a new application by creating a Python file and importing the `SimplePythonFramework` class:
-
-```python
-from simple_python_framework import SimplePythonFramework
-
-app = SimplePythonFramework()
+```bat
+git clone https://github.com/Sonkoh/SimplePythonFramework
 ```
 
-You can then define your views and URL routes using the `@app.route` decorator:
+Once installed, you can start up the server with:
+
+```python
+python3 main.py
+```
+
+You can then define your views and URL routes using the `@app.route` decorator in any file in `routes` folder:
 
 ```python
 @app.route("/")
-def index(request):
+def Route():
     return "Hello, world!"
 ```
     
-Finally, you can run your application using the run method:
+Too, you can use the public folder to files without python scripts.
+You can render html's that found in the `src` directory and send data to it:
 
-```pythonif __name__ == "__main__":
-    app.run()
+```python
+@app.GET('/')
+def Route():
+    # return_code(500)
+    return render('example_render', { # render(@file, @data) 
+        "title": "Example Render",    # @file: Render file from "/src/..."
+        "var_1": "Value 1"            # @data: { 'key': 'value' } 
+    })
 ```
+
+And you can declare 404 function:
+
+```python
+@app.DEFAULT_404(404) # RESPONSE CODE
+def Route():
+    return "Error 404"
+```
+
+Finaly, you can modify all source code, that is located in `engine/server.py` and in `engine/main.py`
 
 ## Contributing
 If you would like to contribute to SimplePythonFramework, please feel free to submit a pull request or open an issue. We welcome contributions of all kinds, including bug fixes, new features, documentation improvements, and more.
