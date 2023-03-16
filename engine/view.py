@@ -11,7 +11,7 @@ def render(file, data):
         pattern = re.compile(r'\{%=[\s\S]*?%\}')
         for custom in pattern.findall(content):
             old = custom
-            custom = re.sub(r"render\((.*?)\)", lambda match: data[match.group(1)], custom)
+            custom = re.sub(r"render\((.*?)\)", lambda match: str(data[match.group(1)]), custom)
             custom = re.sub(r"env\((.*?)\)", lambda match: {key: value for key, value in dotenv.dotenv_values().items()}[match.group(1)], custom)
             custom = re.sub(r'{%=(.*?)%}', r'\1', custom)
             content = content.replace(old, custom)

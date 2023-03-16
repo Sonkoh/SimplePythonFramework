@@ -3,6 +3,7 @@ import socketserver
 import mimetypes
 import os
 from typing import List
+from urllib.parse import urlparse, parse_qs
 
 default_options = {'PROJECT_NAME': 'Nombre del Proyecto', 'PROJECT_HOST': '', 'PROJECT_PORT': '8000'}
 
@@ -13,17 +14,19 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.DEFAULT_404 = data["DEFAULT_404"]
         super().__init__(*args, **kwargs)
     def do_GET(self):
+        parsed_url = urlparse(self.path)
+        query_params = parse_qs(parsed_url.query)
         for route in self.routes:
-            if self.path == route["path"] and route["method"] == "GET":
+            if parsed_url.path == route["path"] and route["method"] == "GET":
                 self.send_response(route["response_code"])
                 for header in route["headers"]:
                     self.send_header(header[0], header[1])
                 self.end_headers()
-                self.wfile.write(str(route["response"]()).encode('ascii'))
+                self.wfile.write(str(route["response"](data=query_params)).encode('ascii'))
                 return
             
-        file_path = os.path.join('public', self.path.lstrip('/'))
-        if os.path.exists(file_path) and self.path.lstrip('/') != "":
+        file_path = os.path.join('public', parsed_url.path.lstrip('/'))
+        if os.path.exists(file_path) and parsed_url.path.lstrip('/') != "":
             file_path = file_path
             mime_type, encoding = mimetypes.guess_type(file_path)
             self.send_response(200)
@@ -37,34 +40,34 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self.send_response(int(self.DEFAULT_404["status"]))
             self.send_header('Content-type', 'text/html')
             self.end_headers()
-            self.wfile.write(str(self.DEFAULT_404["response"]()).encode('ascii'))
+            self.wfile.write(str(self.DEFAULT_404["response"](data=query_params)).encode('ascii'))
 
     def do_POST():
         for route in self.routes:
-            if self.path == route["path"] and route["method"] == "POST":
+            if parsed_url.path == route["path"] and route["method"] == "POST":
                 self.send_response(route["response_code"])
                 for header in route["headers"]:
                     self.send_header(header[0], header[1])
                 self.end_headers()
-                self.wfile.write(str(route["response"]()).encode('ascii'))
+                self.wfile.write(str(route["response"](data=query_params)).encode('ascii'))
                 return
     def do_PATCH():
         for route in self.routes:
-            if self.path == route["path"] and route["method"] == "PATCH":
+            if parsed_url.path == route["path"] and route["method"] == "PATCH":
                 self.send_response(route["response_code"])
                 for header in route["headers"]:
                     self.send_header(header[0], header[1])
                 self.end_headers()
-                self.wfile.write(str(route["response"]()).encode('ascii'))
+                self.wfile.write(str(route["response"](data=query_params)).encode('ascii'))
                 return
     def do_DELETE():
         for route in self.routes:
-            if self.path == route["path"] and route["method"] == "DELETE":
+            if parsed_url.path == route["path"] and route["method"] == "DELETE":
                 self.send_response(route["response_code"])
                 for header in route["headers"]:
                     self.send_header(header[0], header[1])
                 self.end_headers()
-                self.wfile.write(str(route["response"]()).encode('ascii'))
+                self.wfile.write(str(route["response"](data=query_params)).encode('ascii'))
                 return
 
 class Server(socketserver.TCPServer):
